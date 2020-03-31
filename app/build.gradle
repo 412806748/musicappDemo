@@ -1,0 +1,88 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.android.compileSdkVersion
+    buildToolsVersion rootProject.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId rootProject.android.applicationId
+        minSdkVersion rootProject.android.minSdkVersion
+        targetSdkVersion rootProject.android.targetSdkVersion
+        versionCode rootProject.android.versionCode
+        versionName rootProject.android.versionName
+        multiDexEnabled rootProject.android.multiDexEnabled
+
+        //ARouter配置
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName(), AROUTER_GENERATE_DOC: "enable"]
+            }
+        }
+
+    }
+
+
+    //不同渠道的签名，可以定义多个
+    signingConfigs {
+        release {
+            // 绝对路径或相对路径
+            storeFile file("imooc_voice_key")
+            storePassword " "
+            keyAlias " "
+            keyPassword " "
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation rootProject.depsLibs.appcompact
+    implementation rootProject.depsLibs.design
+    implementation rootProject.depsLibs.recyclerview
+    implementation rootProject.depsLibs.constraint
+    //eventbus类库依赖
+    implementation rootProject.depsLibs.eventbus
+    //greendao类库依赖
+    implementation rootProject.depsLibs.greendao
+    //rxjava库
+    implementation rootProject.depsLibs.rxjava
+    implementation rootProject.depsLibs.rxandroid
+    //arouter库
+    implementation(rootProject.depsLibs.arouterapi) {
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor rootProject.depsLibs.aroutercompiler
+    //gson解析库
+    implementation rootProject.depsLibs.gson
+    //网络请求库
+    implementation project(path: ':lib_network')
+
+
+
+
+
+
+}
